@@ -10,6 +10,7 @@ use App\Http\Requests\UploadImageRequest;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as ImageManager;
 
+
 class ImageController extends Controller
 {
     public function __construct()
@@ -99,11 +100,20 @@ class ImageController extends Controller
         ->route('owner.images.index')->with(['message' => '画像情報を更新しました。', 'status' => 'info']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        $image = Image::findOrFail($id);
+        $filePath = 'public/products/'.$image->filename;
+
+        if(Storage::exists($filePath)) {
+            Storage::delete($filePath);
+        }
+
+        Image::findOrFail($id)->delete();
+        
+        return redirect()
+        ->route('owner.images.index')
+        ->with(['message' => '画像を削除しました。',
+    'status' => 'alert']);
     }
 }
