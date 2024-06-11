@@ -45,11 +45,6 @@ class CategorySeeder extends Seeder
                 'primary_category_id' => 1
             ],
             [
-                'name' => '',
-                'sort_order' => 3,
-                'primary_category_id' => 2
-            ],
-            [
                 'name' => 'ギフトセット',
                 'sort_order' => 4,
                 'primary_category_id' => 2

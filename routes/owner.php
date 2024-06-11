@@ -13,6 +13,7 @@ use App\Http\Controllers\Owner\Auth\RegisteredUserController;
 use App\Http\Controllers\Owner\Auth\VerifyEmailController;
 use App\Http\Controllers\Owner\ShopController;
 use App\Http\Controllers\Owner\ImageController;
+use App\Http\Controllers\Owner\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,9 +26,9 @@ use App\Http\Controllers\Owner\ImageController;
 |
 */
 
-Route::get('/', function () {
-    return view('owner.welcome');
-});
+// Route::get('/', function () {
+//     return view('owner.welcome');
+// });
 
 Route::prefix('shops')->
 middleware('auth:owners')->group(function(){
@@ -37,6 +38,9 @@ middleware('auth:owners')->group(function(){
 });
 
 Route::resource('images', ImageController::class)
+->middleware('auth:owners')->except(['show']);
+
+Route::resource('products', ProductController::class)
 ->middleware('auth:owners')->except(['show']);
 
 Route::get('/dashboard', function () {
@@ -52,10 +56,10 @@ Route::middleware('auth:owner')->group(function () {
 
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
-                ->name('register');
+    // Route::get('register', [RegisteredUserController::class, 'create'])
+    //             ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    // Route::post('register', [RegisteredUserController::class, 'store']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
                 ->name('login');
