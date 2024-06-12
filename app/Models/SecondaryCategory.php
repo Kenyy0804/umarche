@@ -10,7 +10,7 @@ class SecondaryCategory extends Model
 {
     use HasFactory;
 
-    public function Primary()
+    public function primary()
     {
         return $this->belongsTo(PrimaryCategory::class);
     }
