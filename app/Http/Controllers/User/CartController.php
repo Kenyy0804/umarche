@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Stock;
 
 class CartController extends Controller
 {
@@ -58,16 +59,37 @@ class CartController extends Controller
         
         $lineItems = [];
         foreach($products as $product){
-            $lineItem = [
-                'name' => $product->name,
-                'description' => $product->information,
-                'amount' => $product->price,
-                'currency' => 'jpy',
-                'quantity' => $product->pivot->quantity,
-            ];
-            array_push($lineItems, $lineItem);
+            $quantity = '';
+            $quantity = Stock::where('product_id', $product->id)->sum('quantity');
+
+            if($product->pivot->quantity > $quantity){
+                return redirect()->route('user.cart.index');
+            }else{
+                $price_data = ([
+                    'unit_amount' => $product->price,
+                    'currency' => 'jpy',
+                    'product_data' => $product_data = ([
+                        'name' => $product->name,
+                        'description' => $product->information,
+                    ]),
+                ]);
+ 
+                $lineItem = [
+                    'price_data' => $price_data,
+                    'quantity' => $product->pivot->quantity,
+                ];
+                array_push($lineItems, $lineItem);
+            }
         }
         // dd($lineItems);
+        foreach($products as $product){
+            Stock::create([
+                'product_id' => $product->id,
+                'type' => \Constant::PRODUCT_LIST['reduce'],
+                'quantity' => $product->pivot->quantity * -1
+            ]);
+        }
+
 
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
@@ -75,7 +97,7 @@ class CartController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => [$lineItems],
             'mode' => 'payment',
-            'success_url' => route('user.items.index'),
+            'success_url' => route('user.cart.success'),
             'cancel_url' => route('user.cart.index'),
         ]);
 
@@ -83,5 +105,12 @@ class CartController extends Controller
 
         return view('user.checkout',
         compact('session', 'publicKey'));
+    }
+
+    public function success()
+    {
+        Cart::where('user_id', Auth::id())->delete();
+
+        return redirect()->route('user.items.index');
     }
 }
