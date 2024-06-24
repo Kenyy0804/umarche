@@ -41,13 +41,13 @@
                               <div class="p-2 w-1/2 mx-auto">
                                 <div class="relative">
                                   <label for="current_quantity" class="leading-7 text-sm text-gray-600">現在の在庫 ※必須</label>
-                                  <input type="hidden" id="current_quantity" name="current_quantity" value="{{ $quantity }}" required >
+                                  <input type="hidden" id="current_quantity" name="current_quantity" value="{{ $quantity }}" >
                                   <div class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-green-500 focus:bg-white focus:ring-2 focus:ring-green-200 text-base outline-none text-gray-700 py-1 px-3 leading-8">{{ $quantity }}</div>
                                 </div>
                               </div>
                               <div class="p-2 w-1/2 mx-auto">
                                 <div class="relative flex justify-around">
-                                    <div><input type="radio" name="type" value="{{ \Constant::PRODUCT_LIST['add'] }}" class="mr-2" checked >追加</div>
+                                    <div><input type="radio" name="type" value="{{ \Constant::PRODUCT_LIST['add'] }}" class="mr-2" {checked} >追加</div>
                                     <div><input type="radio" name="type" value="{{ \Constant::PRODUCT_LIST['reduce'] }}" class="mr-2" >削減</div>
                                 </div>
                             </div>
