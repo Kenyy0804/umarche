@@ -117,7 +117,7 @@ class Product extends Model
         }
     }
 
-    public function scopeSerchKeyword($query, $keyword)
+    public function scopeSearchKeyword($query, $keyword)
     {
         if(!is_null($keyword))
         {

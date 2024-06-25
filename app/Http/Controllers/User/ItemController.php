@@ -46,9 +46,9 @@ class ItemController extends Controller
 
         $products = Product::availableItems()
         ->selectCategory($request->category ?? '0')
-        ->serchKeyword($request->keyword)
+        ->searchKeyword($request->keyword)
         ->sortOrder($request->sort)
-        ->get();
+        ->paginate($request->pagination ?? '20');
 
         return view('user.index', compact('products', 'categories'));
     }

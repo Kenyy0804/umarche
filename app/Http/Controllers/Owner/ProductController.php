@@ -148,7 +148,7 @@ class ProductController extends Controller
     ->sum('quantity');
 
     if($request->current_quantity !== $quantity){
-        $id = $request->route()->parameter('products');
+        $id = $request->route()->parameter('product');
         return redirect()->route('owner.products.edit', ['product' => $id])
         ->with(['message', '在庫数が変更されています。再度確認してください。', 'status' => 'info']);
     } else {
